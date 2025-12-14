@@ -11,8 +11,7 @@ document.getElementById("floorPlanForm").addEventListener("submit", function(e){
     const designsContainer = document.getElementById("designsContainer");
     designsContainer.innerHTML = "";
 
-    // Convert plot dimensions to canvas scale
-    const scale = Math.min(200 / length, 200 / width); // scale to fit canvas
+    const scale = Math.min(200 / length, 200 / width); // Scale to fit canvas
 
     for(let i=1; i<=20; i++){
         const canvas = document.createElement("canvas");
@@ -20,69 +19,67 @@ document.getElementById("floorPlanForm").addEventListener("submit", function(e){
         canvas.height = 250;
         const ctx = canvas.getContext("2d");
 
-        // Clear canvas and set background
+        // Background
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(0,0,canvas.width,canvas.height);
         ctx.strokeStyle = "#000000";
         ctx.lineWidth = 1;
 
-        // Keep track of occupied area
-        let offsetX = 10;
-        let offsetY = 10;
-        let remainingWidth = width;
-        let remainingLength = length;
-
+        // Random offset for variation
+        const offsetX = 10 + Math.random()*10;
+        const offsetY = 10 + Math.random()*10;
         const roomPadding = 5;
 
-        // 1. Bedrooms
-        const bedroomWidth = (width / bedrooms) * scale - roomPadding;
-        const bedroomLength = (length / 3) * scale - roomPadding; // 1/3 length for bedrooms
-
-        for(let b=0; b<bedrooms; b++){
-            ctx.strokeRect(offsetX + b*bedroomWidth, offsetY, bedroomWidth, bedroomLength);
+        // Function to draw room
+        function drawRoom(name, x, y, w, h){
+            ctx.strokeRect(x, y, w, h);
             ctx.fillStyle = "#000";
             ctx.font = "10px Poppins";
-            ctx.fillText(`Bedroom ${b+1}`, offsetX + b*bedroomWidth + 5, offsetY + 15);
+            ctx.fillText(name, x+3, y+12);
         }
 
-        offsetY += bedroomLength + roomPadding;
+        let currentY = offsetY;
+
+        // 1. Bedrooms
+        const bedroomHeight = (length/3)*scale - roomPadding;
+        const bedroomWidth = ((width - roomPadding*(bedrooms-1))/bedrooms)*scale;
+        for(let b=0; b<bedrooms; b++){
+            let x = offsetX + b*(bedroomWidth + roomPadding);
+            drawRoom(`Bedroom ${b+1}`, x, currentY, bedroomWidth, bedroomHeight);
+        }
+        currentY += bedroomHeight + roomPadding;
 
         // 2. Kitchen
-        const kitchenWidth = width * scale / 2 - roomPadding;
-        const kitchenLength = length * scale / 4 - roomPadding;
-        ctx.strokeRect(offsetX, offsetY, kitchenWidth, kitchenLength);
-        ctx.fillText("Kitchen", offsetX + 5, offsetY + 15);
+        const kitchenHeight = (length/4)*scale;
+        const kitchenWidth = (width/2)*scale - roomPadding;
+        drawRoom("Kitchen", offsetX, currentY, kitchenWidth, kitchenHeight);
 
         // 3. Bathroom
-        const bathroomWidth = width * scale / 4 - roomPadding;
-        const bathroomLength = length * scale / 4 - roomPadding;
-        ctx.strokeRect(offsetX + kitchenWidth + roomPadding, offsetY, bathroomWidth, bathroomLength);
-        ctx.fillText("Bathroom", offsetX + kitchenWidth + 5, offsetY + 15);
+        const bathroomWidth = (width/4)*scale;
+        const bathroomHeight = kitchenHeight;
+        drawRoom("Bathroom", offsetX + kitchenWidth + roomPadding, currentY, bathroomWidth, bathroomHeight);
 
-        offsetY += kitchenLength + roomPadding;
+        currentY += kitchenHeight + roomPadding;
 
         // 4. Parking
         if(car){
-            const carWidth = width * scale / 2 - roomPadding;
-            const carLength = length * scale / 6;
-            ctx.strokeRect(offsetX, offsetY, carWidth, carLength);
-            ctx.fillText("Car Parking", offsetX + 5, offsetY + 15);
+            const carWidth = (width/2)*scale;
+            const carHeight = (length/6)*scale;
+            drawRoom("Car Parking", offsetX, currentY, carWidth, carHeight);
         } else if(bike){
-            const bikeWidth = width * scale / 4 - roomPadding;
-            const bikeLength = length * scale / 6;
-            ctx.strokeRect(offsetX, offsetY, bikeWidth, bikeLength);
-            ctx.fillText("Bike Parking", offsetX + 5, offsetY + 15);
+            const bikeWidth = (width/4)*scale;
+            const bikeHeight = (length/6)*scale;
+            drawRoom("Bike Parking", offsetX, currentY, bikeWidth, bikeHeight);
         }
 
         // 5. Staircase
         if(staircase){
-            const stairWidth = width * scale / 5 - roomPadding;
-            const stairLength = length * scale / 6;
-            ctx.strokeRect(offsetX + width*scale - stairWidth - 10, offsetY, stairWidth, stairLength);
-            ctx.fillText("Stairs", offsetX + width*scale - stairWidth, offsetY + 15);
+            const stairWidth = (width/5)*scale;
+            const stairHeight = (length/6)*scale;
+            drawRoom("Stairs", offsetX + width*scale - stairWidth - 10, currentY, stairWidth, stairHeight);
         }
 
-        // Add card wrapper
+        // Card wrapper
         const designBox = document.createElement("div");
         designBox.className = "design";
 
