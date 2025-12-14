@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoNaksha – Smart Floor Plan Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <h1>🏡 AutoNaksha</h1>
+        <p>Smart Floor Plan Generator | Generate 20+ Premium Designs Instantly</p>
+    </header>
+
+    <main class="container">
+        <section class="input-panel card">
+            <h2>📏 Enter Plot Details</h2>
+            <form id="floorPlanForm">
+                <div class="form-group">
+                    <label for="plotLength">Total Plot Length (ft)</label>
+                    <input type="number" id="plotLength" required min="20" placeholder="e.g., 40">
+                </div>
+                <div class="form-group">
+                    <label for="plotWidth">Total Plot Width (ft)</label>
+                    <input type="number" id="plotWidth" required min="15" placeholder="e.g., 30">
+                </div>
+                <div class="form-group">
+                    <label for="bedrooms">Number of Bedrooms</label>
+                    <select id="bedrooms" required>
+                        <option value="1">1 Bedroom</option>
+                        <option value="2" selected>2 Bedrooms</option>
+                        <option value="3">3 Bedrooms</option>
+                    </select>
+                </div>
+                
+                <h3 class="filters-heading">Optional Filters:</h3>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="parkingCar">
+                    <label for="parkingCar">Car Parking</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="parkingBike">
+                    <label for="parkingBike">Bike Parking</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="staircase">
+                    <label for="staircase">Staircase (for multi-storey)</label>
+                </div>
+                <div class="checkbox-group future-ready">
+                    <input type="checkbox" id="vastu" disabled>
+                    <label for="vastu">Vastu Mode (Future)</label>
+                </div>
+
+                <button type="submit" class="cta-button">✨ Generate 20+ Designs</button>
+            </form>
+        </section>
+
+        <section class="output-panel">
+            <h2>📐 Generated Layouts</h2>
+            <div id="designsContainer" class="designs-grid">
+                <p class="placeholder">Enter dimensions and click 'Generate' to see floor plans here.</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
